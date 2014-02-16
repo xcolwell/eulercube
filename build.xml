@@ -1,0 +1,100 @@
+<project name="euler_cube" default="help" basedir=".">
+	<target name="help">
+<echo>euler cube
+	
+See    
+       dist
+</echo>
+	</target>
+	
+	
+	<!--
+	****************************************************
+	* BEGIN PROPERTIES 
+	****************************************************
+	-->
+	
+
+	<property file="conf/build.properties"/>
+	
+	<property 	name  ="version"
+				value ="internal" />
+	
+	<property 	name  ="dist" 			
+				value ="dist" />
+	
+	<property 	name  ="conf"
+				value ="conf" />
+	
+	<property 	name  ="dist-temp" 
+				value ="dist/temp" />
+	
+	<property 	name  ="src-java"
+				value ="src/java" />
+	
+	<property 	name  ="jar_name"
+				value ="eulercube_${version}.jar" />
+	
+	
+	<path id="core-cp">
+		<fileset dir="lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+	<path id="compile-cp">
+		<path refid="core-cp"/>
+	</path>
+	<property name="compile-cp-prop" refid="compile-cp"/>
+	
+
+	<!--
+	****************************************************
+	* END PROPERTIES
+	****************************************************
+	-->
+		
+	
+	<!--
+	****************************************************
+	* BEGIN BUILD 
+	****************************************************
+	-->
+	
+	<target name="clean">
+		<delete dir="${dist}"/>
+		<delete dir="${dist-temp}"/>
+	</target>
+	
+	<!-- Ensures the dist-temp and dist directories are created -->
+	<target name="init-dirs">
+		<mkdir dir="${dist}"/>
+		<mkdir dir="${dist-temp}"/>
+	</target>
+	
+	<target name="copy-all">
+		<copy todir="${dist-temp}">
+			<fileset dir="${src-java}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="compile">
+		<!--<echo message="${compile-cp-prop}"/>-->
+		<javac srcdir="${src-java}" destdir="${dist-temp}" classpathref="compile-cp" source="1.5" target="1.5"/>
+	</target>
+	
+	<target name="dist" depends="clean, init-dirs, copy-all, compile">
+		<jar basedir="${dist-temp}" destfile="${dist}/${jar_name}" compress="true">
+		</jar>
+		<delete dir="${dist-temp}"/>
+	</target>
+
+	<!--
+	****************************************************
+	* END BUILD 
+	****************************************************
+	-->
+	
+</project>
